@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Form</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="/css/book.css">
+</head>
+<body>
+    <div class="section">
+        <h1>Add a Book</h1>
+        <form action="/submit" method="post">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required><br>
+    
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required><br>
+    
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+    
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div class="section">
+        <h1>Book Submitted</h1>
+        <div class="w3-container" style="margin-bottom:20px">
+            <table class="w3-table w3-bordered">
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Rating</th>
+                </tr>
+                {{range $book := .Books}}
+                <tr>
+                    <td>{{$book.Title}}</td>
+                    <td>{{$book.Author}}</td>
+                    <td>
+                        {{- $rating := .Rating }}
+                        {{- range Until $rating }}
+                            <img src="/img/stars.svg" alt="Star" width="16" height="16">
+                        {{- end }}
+                    </td>
+                </tr>
+                {{end}}
+                </table>
+            </div>
+    </div>
+</body>
+</html>
