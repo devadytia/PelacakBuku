@@ -9,20 +9,22 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	_ "github.com/lib/pq"
 	"gopkg.in/go-playground/validator.v9"
 )
 
 var validate = validator.New()
 
 func Index(c *fiber.Ctx) error {
-	dsn := "root:@tcp(localhost:3306)/bookcollect"
-	db, err := sql.Open("mysql", dsn)
+	dsn := "user=postgres dbname=bookcollect sslmode=disable"
+
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT title, author, rating FROM books")
+	rows, err := db.Query("SELECT title, author, rating FROM books ORDER BY id DESC")
 	if err != nil {
 		return err
 	}

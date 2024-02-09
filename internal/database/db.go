@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
 
 func InitDatabase() {
 	var err error
-	db, err = sql.Open("mysql", "root:@tcp(localhost:3306)/")
+	// Update the connection string for PostgreSQL
+	db, err = sql.Open("postgres", "user=postgres dbname=bookcollect sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,31 +26,15 @@ func InitDatabase() {
 	fmt.Println("Connected to the database")
 }
 
-func CreateDatabase() {
-	_, err := db.Exec("CREATE DATABASE IF NOT EXISTS bookcollect")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Database 'bookcollect' created successfully")
-}
-
-func UseDatabase() {
-	_, err := db.Exec("USE bookcollect")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func CreateTable() {
 	_, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS books (
-			id INT AUTO_INCREMENT PRIMARY KEY,
+			id SERIAL PRIMARY KEY,
 			title VARCHAR(255),
 			author VARCHAR(255),
 			rating INT,
-			created_at TIMESTAMP,
-			updated_at TIMESTAMP
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
 	`)
 	if err != nil {
