@@ -4,7 +4,6 @@ import (
 	book "PelacakBuku/app/model"
 	bookservice "PelacakBuku/app/services"
 
-	"database/sql"
 	"fmt"
 	"strconv"
 
@@ -16,29 +15,10 @@ import (
 var validate = validator.New()
 
 func Index(c *fiber.Ctx) error {
-	dsn := "user=postgres dbname=bookcollect sslmode=disable"
+	books, err := bookservice.GetBook()
 
-	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return err
-	}
-	defer db.Close()
-
-	rows, err := db.Query("SELECT title, author, rating FROM books ORDER BY id DESC")
-	if err != nil {
-		return err
-	}
-	defer rows.Close()
-
-	// Loop melalui hasil query dan membangun slice Book
-	var books []book.Book
-	for rows.Next() {
-		var book book.Book
-		err := rows.Scan(&book.Title, &book.Author, &book.Rating)
-		if err != nil {
-			return err
-		}
-		books = append(books, book)
 	}
 
 	return c.Render("book", fiber.Map{"Books": books})

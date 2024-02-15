@@ -1,7 +1,15 @@
 package helper
 
 import (
+	"database/sql"
+	"sync"
+
 	"github.com/gofiber/template/html/v2"
+)
+
+var (
+	db     *sql.DB
+	dbOnce sync.Once
 )
 
 func Until(n int) []int {
@@ -14,4 +22,14 @@ func Until(n int) []int {
 
 func RegisterFuncs(engine *html.Engine) {
 	engine.AddFunc("Until", Until)
+}
+
+func Connect() (*sql.DB, error) {
+	var err error
+	dbOnce.Do(func() {
+		dsn := "user=postgres dbname=bookcollect sslmode=disable"
+		db, err = sql.Open("postgres", dsn)
+	})
+
+	return db, err
 }

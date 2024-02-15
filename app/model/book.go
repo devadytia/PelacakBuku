@@ -1,7 +1,7 @@
 package book
 
 type Book struct {
-	Title  string
-	Author string
-	Rating int
+	Title  string `validate:"required"`
+	Author string `validate:"required"`
+	Rating int    `validate:"max=5,min=1"`
 }

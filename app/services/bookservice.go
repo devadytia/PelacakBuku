@@ -1,21 +1,47 @@
 package bookservice
 
 import (
+	helper "PelacakBuku/app/helper"
 	book "PelacakBuku/app/model"
-	"database/sql"
 	"fmt"
 	"time"
 
 	_ "github.com/lib/pq"
 )
 
+func GetBook() ([]book.Book, error) {
+	db, err := helper.Connect()
+
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := db.Query("SELECT title, author, rating FROM books ORDER BY id DESC")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var books []book.Book
+
+	for rows.Next() {
+		var book book.Book
+		err := rows.Scan(&book.Title, &book.Author, &book.Rating)
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, book)
+	}
+
+	return books, err
+}
+
 func StoreBook(book book.Book) error {
-	dsn := "user=postgres dbname=bookcollect sslmode=disable"
-	db, err := sql.Open("postgres", dsn)
+	db, err := helper.Connect()
+
 	if err != nil {
 		return err
 	}
-	defer db.Close()
 
 	currentTime := time.Now()
 
