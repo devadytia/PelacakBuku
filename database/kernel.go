@@ -1,15 +1,11 @@
 package main
 
 import (
-	"PelacakBuku/internal/database"
+	database "PelacakBuku/database/migrations"
 )
 
 func main() {
 	database.InitDatabase()
-
-	database.CreateDatabase()
-
-	database.UseDatabase()
 
 	database.CreateTable()
 }

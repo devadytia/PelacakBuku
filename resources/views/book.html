@@ -40,17 +40,23 @@
                     <th>Author</th>
                     <th>Rating</th>
                 </tr>
-                {{range $book := .Books}}
-                <tr>
-                    <td>{{$book.Title}}</td>
-                    <td>{{$book.Author}}</td>
-                    <td>
-                        {{- $rating := .Rating }}
-                        {{- range Until $rating }}
-                            <img src="/img/stars.svg" alt="Star" width="16" height="16">
-                        {{- end }}
-                    </td>
-                </tr>
+                {{if eq (len .Books) 0}}
+                    <tr >
+                        <td colspan="3" style="text-align: center;">No books available</td>
+                    </tr>
+                {{else}}
+                    {{range $book := .Books}}
+                        <tr>
+                            <td>{{$book.Title}}</td>
+                            <td>{{$book.Author}}</td>
+                            <td>
+                                {{- $rating := .Rating }}
+                                {{- range Until $rating }}
+                                    <img src="/img/stars.svg" alt="Star" width="16" height="16">
+                                {{- end }}
+                            </td>
+                        </tr>
+                    {{end}}
                 {{end}}
                 </table>
             </div>
